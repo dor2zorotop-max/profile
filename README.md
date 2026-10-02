@@ -20,7 +20,7 @@ npm run dev
 - Competitions: `src/data/competitions.ts`
 - Honors: `src/data/honors.ts`
 - Industry collaboration placeholder: `src/data/industry.ts`
-- Videos and images: project paths point into `public/media/research/` or `public/media/industry/`
+- Images: project paths point into `public/media/research/` or `public/media/industry/`; research MP4 files are stored locally under `.private/media-source/research/` and served from the GitHub Release `research-media-v1`.
 - CV: `public/cv/cv-zh.pdf` and `public/cv/cv-en.pdf` are the published files; each language only links to its own PDF. Keep editable source documents outside `public/` (the local `cv-source/` directory is ignored by Git).
 
 The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). The English pages follow the Chinese content in the existing bilingual data files. Dates, publication metadata, and award facts are shared across locales; translate text fields in place. The language switcher displays `EN / 中文` and preserves the current section where possible.
@@ -32,6 +32,8 @@ Research media directories:
 - `public/media/research/exoskeleton/`
 
 Industry media directory: `public/media/industry/`
+
+Large research videos are intentionally kept out of the Pages repository. The public video assets are uploaded to the repository release [Research Media](https://github.com/dor2zorotop-max/profile/releases/tag/research-media-v1) with stable English filenames, while `src/data/projects.ts` keeps the structured title, category, caption, poster, and release URL for each video. Keep source videos, private documents, and other unpublished material inside `.private/`; this directory is ignored by Git.
 
 ## GitHub Pages
 

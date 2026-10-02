@@ -1,10 +1,26 @@
 ---
 import type { Project } from '../data/projects';
-const { project, locale, labels } = Astro.props as { project: Project; locale: 'zh' | 'en'; labels: Record<string, string> };
+const { project, locale } = Astro.props as { project: Project; locale: 'zh' | 'en'; labels: Record<string, string> };
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
-const exists = (path: string) => path.startsWith('/') && Astro.site ? true : Boolean(path);
+const hasMedia = Boolean(project.heroImage || project.gallery.length || project.videos.length);
+const categoryLabels = locale === 'zh'
+  ? { experiment: '实物实验', simulation: '仿真演示', localization: '视觉定位', system: '系统结构', method: '方法与模型', result: '控制与结果' }
+  : { experiment: 'Real-Flight Experiments', simulation: 'Simulation', localization: 'Visual Localization', system: 'System Structure', method: 'Methods & Models', result: 'Control & Results' };
+const categories = ['experiment', 'simulation', 'localization', 'system', 'method', 'result'] as const;
 ---
-{project.heroImage ? <figure class="media-block"><img src={asset(project.heroImage)} alt={project.title[locale]} /><figcaption>{project.title[locale]}</figcaption></figure> : <div class="media-placeholder">{labels.imagePlaceholder}</div>}
-{project.gallery.length > 0 && <div class="media-gallery">{project.gallery.map(item => <figure class="media-block"><img src={asset(item.src)} alt={item.alt[locale]} /><figcaption>{item.caption[locale]}</figcaption></figure>)}</div>}
-{project.videos.length > 0 ? project.videos.map(video => <figure class="media-block"><video controls playsinline preload="metadata" poster={asset(video.poster)}><source src={asset(video.src)} /></video><figcaption>{video.caption[locale]}</figcaption></figure>) : <div class="media-placeholder">{labels.videoPlaceholder}</div>}
+{hasMedia && <section class="media-section" aria-labelledby={`${project.slug}-media-title`}>
+  <h2 id={`${project.slug}-media-title`}>{locale === 'zh' ? '实验与系统展示' : 'Media & Demonstrations'}</h2>
+  {project.heroImage && <figure class="media-block media-hero"><img loading="lazy" src={asset(project.heroImage)} alt={project.title[locale]} /><figcaption>{project.heroCaption?.[locale] ?? project.title[locale]}</figcaption></figure>}
+  {project.gallery.length > 0 && <div class="media-grid media-gallery">{project.gallery.map(item => <figure class="media-block"><img loading="lazy" src={asset(item.src)} alt={item.alt[locale]} /><figcaption>{item.caption[locale]}</figcaption></figure>)}</div>}
+  {project.videos.length > 0 && <div class="video-groups">{categories.map(category => {
+    const videos = project.videos.filter(video => video.category === category);
+    return videos.length > 0 && <section class="video-group" aria-labelledby={`${project.slug}-${category}`}>
+      <h3 id={`${project.slug}-${category}`}>{categoryLabels[category]}</h3>
+      <div class="media-grid">{videos.map(video => <figure class:list={['media-block', { 'media-featured': video.featured }]}>
+        <video controls playsinline preload="metadata" poster={asset(video.poster)}><source src={asset(video.src)} type="video/mp4" /></video>
+        <figcaption><strong>{video.title[locale]}</strong><span>{video.caption[locale]}</span></figcaption>
+      </figure>)}</div>
+    </section>;
+  })}</div>}
+</section>}
