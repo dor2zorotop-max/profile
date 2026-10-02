@@ -1,9 +1,9 @@
 import type { Locale } from './site';
 export type Competition = { period: string; competition: string; track: string; award: string; contribution: string };
-export const competitions: Record<Locale, Competition[]> = {
-  zh: [
-    { period: '2023.11 – 2024.05', competition: '中国机器人大赛暨 RoboCup 机器人世界杯中国赛', track: '无人机挑战赛', award: '国家一等奖 · 冠军', contribution: '负责多环 PID 调节、视觉标定与去畸变、移动目标跟踪，以及 A* 与 EGO-Planner 路径规划和避障优化。' },
-    { period: '2022.08 – 2024.08', competition: '第十九届全国大学生智能汽车竞赛', track: '百度智慧交通组', award: '国家一等奖', contribution: '负责轮式里程计与惯性导航定位、yaw 闭环调整、CNN 偏差模型自主巡航，以及车模机械结构和主控板设计。' },
-    { period: '2026.03 – 2026.08', competition: '第二十一届中国研究生电子设计竞赛', track: '纯视觉定位的四旋翼无人机组合飞行', award: '国家三等奖', contribution: '' },
-  ], en: [],
-};
+const entries = [
+  { period: '2023.11 – 2024.05', competition: { zh: '中国机器人大赛暨 RoboCup 机器人世界杯中国赛', en: 'China Robot Competition & RoboCup China Open' }, track: { zh: '无人机挑战赛', en: 'UAV Challenge' }, award: { zh: '国家一等奖 · 冠军', en: 'National First Prize · Champion' }, contribution: { zh: '负责多环 PID 调节、视觉标定与去畸变、移动目标跟踪，以及 A* 与 EGO-Planner 路径规划和避障优化。', en: 'Responsible for multi-loop PID tuning, camera calibration and distortion correction, moving-target tracking, and A* and EGO-Planner path planning and obstacle avoidance optimization.' } },
+  { period: '2022.08 – 2024.08', competition: { zh: '第十九届全国大学生智能汽车竞赛', en: '19th National University Intelligent Vehicle Competition' }, track: { zh: '百度智慧交通组', en: 'Baidu Intelligent Transportation Track' }, award: { zh: '国家一等奖', en: 'National First Prize' }, contribution: { zh: '负责轮式里程计与惯性导航定位、yaw 闭环调整、CNN 偏差模型自主巡航，以及车模机械结构和主控板设计。', en: 'Responsible for localization using wheel odometry and inertial navigation, closed-loop yaw adjustment, autonomous navigation with a CNN deviation model, and the vehicle model’s mechanical structure and main control board.' } },
+  { period: '2026.03 – 2026.08', competition: { zh: '第二十一届中国研究生电子设计竞赛', en: '21st China Postgraduate Electronics Design Competition' }, track: { zh: '纯视觉定位的四旋翼无人机组合飞行', en: 'Combined Quadrotor Flight with Visual-Only Localization' }, award: { zh: '国家三等奖', en: 'National Third Prize' }, contribution: { zh: '', en: '' } },
+];
+const forLocale = (locale: Locale): Competition[] => entries.map(({ period, competition, track, award, contribution }) => ({ period, competition: competition[locale], track: track[locale], award: award[locale], contribution: contribution[locale] }));
+export const competitions: Record<Locale, Competition[]> = { zh: forLocale('zh'), en: forLocale('en') };

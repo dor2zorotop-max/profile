@@ -3,5 +3,6 @@ dist
 .astro
 .cache
 .tmp
+cv-source/
 .env
 .env.*

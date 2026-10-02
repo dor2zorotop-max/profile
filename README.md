@@ -21,9 +21,9 @@ npm run dev
 - Honors: `src/data/honors.ts`
 - Industry collaboration placeholder: `src/data/industry.ts`
 - Videos and images: project paths point into `public/media/research/` or `public/media/industry/`
-- CV: place `cv-zh.pdf` and `cv-en.pdf` in `public/cv/`; each language only links to its own file
+- CV: `public/cv/cv-zh.pdf` and `public/cv/cv-en.pdf` are the published files; each language only links to its own PDF. Keep editable source documents outside `public/` (the local `cv-source/` directory is ignored by Git).
 
-The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). Fill the `en` and `zh` keys in the data files. English formal research prose is intentionally left empty until manually confirmed. The language switcher displays `EN / 中文` and preserves the current section where possible.
+The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). The English pages follow the Chinese content in the existing bilingual data files. Dates, publication metadata, and award facts are shared across locales; translate text fields in place. The language switcher displays `EN / 中文` and preserves the current section where possible.
 
 Research media directories:
 
