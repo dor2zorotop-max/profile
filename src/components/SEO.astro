@@ -1,0 +1,8 @@
+---
+import {site} from '../data/site'; const {title=site.title,description=site.description}=Astro.props;
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const pathname=base&&Astro.url.pathname.startsWith(`${base}/`)?Astro.url.pathname.slice(base.length):Astro.url.pathname;
+const section=pathname.replace(/^\/|\/$/g,'');
+const canonical=new URL(section?`${section}/`:'',site.url).href;
+---
+<title>{title}</title><meta name="description" content={description}/><link rel="canonical" href={canonical}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={new URL('media/og-image.png',site.url).href}/><meta property="og:type" content="website"/>

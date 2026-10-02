@@ -1,0 +1,5 @@
+---
+import Layout from '../../components/Layout.astro'; import {copy} from '../../data/content'; import type {Locale} from '../../data/site'; import {competitions} from '../../data/competitions'; import {industry} from '../../data/industry'; import '../../styles/global.css';
+const locale: Locale='zh'; const t=copy[locale];
+---
+<Layout locale={locale} current="experience" title={t.experience}><div class="page-header"><h1>{t.experience}</h1></div><h2>{t.competitions}</h2>{competitions[locale].length?competitions[locale].map(item=><div class="row"><div class="year">{item.period}</div><div><h3>{item.competition}</h3><p>{item.track} · {item.award}</p>{item.contribution&&<p>{item.contribution}</p>}</div></div>):<p class="empty">{t.empty}</p>}<h2>{t.industry}</h2>{industry[locale].length?industry[locale].map(item=><div class="row"><div class="year">{item.period}</div><div><h3>{item.title}</h3><p>{item.company||'合作企业名称暂不公开'}</p></div></div>):<p class="empty">{t.empty}</p>}</Layout>

@@ -1,0 +1,5 @@
+---
+import Layout from '../components/Layout.astro'; import {copy} from '../data/content'; import type {Locale} from '../data/site'; import {projects} from '../data/projects'; import '../styles/global.css';
+const locale: Locale='en'; const t=copy[locale]; const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+---
+<Layout locale={locale} current="projects" title={t.projects}><div class="page-header"><h1>{t.projects}</h1></div>{projects.map(p=><div class="row"><div class="year">{p.period[locale]}</div><div><h3><a href={`${base}/projects/${p.slug}`}>{p.title[locale]}</a></h3>{p.summary[locale]&&<p>{p.summary[locale]}</p>}</div></div>)}</Layout>

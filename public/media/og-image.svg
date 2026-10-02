@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f5f3ee"/>
+  <path d="M84 86v458" stroke="#274c77" stroke-width="6"/>
+  <text x="126" y="204" fill="#274c77" font-family="Arial, sans-serif" font-size="28" letter-spacing="4">ACADEMIC PROFILE</text>
+  <text x="126" y="366" fill="#171717" font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" font-size="104" font-weight="600">洪陈源</text>
+  <path d="M126 440h950" stroke="#d8d5cd" stroke-width="2"/>
+  <text x="126" y="510" fill="#6f6f6f" font-family="Arial, sans-serif" font-size="30">Research  /  Projects  /  Publications</text>
+</svg>

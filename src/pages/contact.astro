@@ -1,0 +1,5 @@
+---
+import Layout from '../components/Layout.astro'; import {copy} from '../data/content'; import type {Locale} from '../data/site'; import {profile} from '../data/profile'; import '../styles/global.css';
+const locale: Locale='en'; const t=copy[locale];
+---
+<Layout locale={locale} current="contact" title={t.contact}><div class="page-header"><h1>{t.contact}</h1></div><div class="links">{profile.email&&<a href={`mailto:${profile.email}`}>{t.email}</a>}{profile.website&&<a href={profile.website}>{t.website}</a>}{profile.github&&<a href={profile.github}>{t.github}</a>}{profile.googleScholar&&<a href={profile.googleScholar}>{t.scholar}</a>}{profile.orcid&&<a href={profile.orcid}>{t.orcid}</a>}</div></Layout>

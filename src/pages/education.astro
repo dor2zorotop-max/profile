@@ -1,0 +1,5 @@
+---
+import Layout from '../components/Layout.astro'; import {copy} from '../data/content'; import type {Locale} from '../data/site'; import {education} from '../data/education'; import '../styles/global.css';
+const locale: Locale='en'; const t=copy[locale];
+---
+<Layout locale={locale} current="education" title={t.education}><div class="page-header"><h1>{t.education}</h1></div>{education[locale].length?education[locale].map(e=><div class="row"><div class="year">{e.period}</div><div><h3>{e.institution}</h3><p>{e.school}</p><p>{e.degree} · {e.field}</p></div></div>):<p class="empty">{t.empty}</p>}</Layout>

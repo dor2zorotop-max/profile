@@ -1,0 +1,5 @@
+---
+const { video, poster, caption } = Astro.props as { video?: string; poster?: string; caption?: string }; const base=import.meta.env.BASE_URL.replace(/\/$/,''); const asset=(path?:string)=>path?.startsWith('/')?`${base}${path}`:path;
+---
+{video && <figure class="project-video"><video controls playsinline preload="metadata" poster={asset(poster)}><source src={asset(video)} /></video>{caption && <figcaption>{caption}</figcaption>}</figure>}
+<style>.project-video{margin:28px 0}.project-video video{display:block;max-width:100%;height:auto}.project-video figcaption{color:var(--muted);font-size:.85rem;margin-top:8px}</style>

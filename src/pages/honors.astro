@@ -1,0 +1,5 @@
+---
+import Layout from '../components/Layout.astro'; import {copy} from '../data/content'; import type {Locale} from '../data/site'; import {honors} from '../data/honors'; import '../styles/global.css';
+const locale: Locale='en'; const t=copy[locale];
+---
+<Layout locale={locale} current="honors" title={t.honors}><div class="page-header"><h1>{t.honors}</h1></div>{honors[locale].length?honors[locale].map(h=><div class="row"><div class="year">{h.year}</div><div><h3>{h.title}</h3><p>{h.note}</p></div></div>):<p class="empty">{t.empty}</p>}</Layout>

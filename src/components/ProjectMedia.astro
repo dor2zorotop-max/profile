@@ -1,0 +1,10 @@
+---
+import type { Project } from '../data/projects';
+const { project, locale, labels } = Astro.props as { project: Project; locale: 'zh' | 'en'; labels: Record<string, string> };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
+const exists = (path: string) => path.startsWith('/') && Astro.site ? true : Boolean(path);
+---
+{project.heroImage ? <figure class="media-block"><img src={asset(project.heroImage)} alt={project.title[locale]} /><figcaption>{project.title[locale]}</figcaption></figure> : <div class="media-placeholder">{labels.imagePlaceholder}</div>}
+{project.gallery.length > 0 && <div class="media-gallery">{project.gallery.map(item => <figure class="media-block"><img src={asset(item.src)} alt={item.alt[locale]} /><figcaption>{item.caption[locale]}</figcaption></figure>)}</div>}
+{project.videos.length > 0 ? project.videos.map(video => <figure class="media-block"><video controls playsinline preload="metadata" poster={asset(video.poster)}><source src={asset(video.src)} /></video><figcaption>{video.caption[locale]}</figcaption></figure>) : <div class="media-placeholder">{labels.videoPlaceholder}</div>}
