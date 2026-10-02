@@ -25,6 +25,8 @@ npm run dev
 
 The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). The English pages follow the Chinese content in the existing bilingual data files. Dates, publication metadata, and award facts are shared across locales; translate text fields in place. The language switcher displays `EN / 中文` and preserves the current section where possible.
 
+The homepage is a single academic personal homepage rather than a CV navigation page. Its profile card and five hash-based tabs (`#biography`, `#research`, `#experience`, `#competitions`, `#projects`) are rendered from the existing profile, research, project, competition, education, honors, and publication data. The older routes remain available for existing links, while the primary header only exposes Home, Research, Projects, CV, and the language switcher.
+
 Research media directories:
 
 - `public/media/research/reconfigurable-uav/`

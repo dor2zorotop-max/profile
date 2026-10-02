@@ -1,6 +1,45 @@
 ---
-import Sidebar from './Sidebar.astro'; import SEO from './SEO.astro'; import {copy} from '../data/content'; import {profile} from '../data/profile'; import type {Locale} from '../data/site';
-const {locale,current,title}=Astro.props as {locale:Locale;current:string;title?:string}; const t=copy[locale]; const base=import.meta.env.BASE_URL.replace(/\/$/,''); const home=locale==='en'?`${base}/`:`${base}/zh/`; const name=locale==='en'?profile.nameEn:profile.name;
+import SEO from './SEO.astro';
+import { copy } from '../data/content';
+import { profile } from '../data/profile';
+import { languages, type Locale } from '../data/site';
+const { locale, current, title } = Astro.props as { locale: Locale; current: string; title?: string };
+const t = copy[locale];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const home = locale === 'en' ? `${base}/` : `${base}/zh/`;
+const name = locale === 'en' ? profile.nameEn : profile.name;
+const pathname = Astro.url.pathname.replace(base, '') || '/';
+const pathWithoutLocale = pathname.replace(/^\/zh(?=\/|$)/, '') || '/';
+const localizedPath = (target: Locale) => target === 'en' ? `${base}${pathWithoutLocale === '/' ? '/' : pathWithoutLocale}` : `${base}/zh${pathWithoutLocale === '/' ? '/' : pathWithoutLocale}`;
+const primary = [
+  { key: 'home', href: home },
+  { key: 'research', href: `${base}${locale === 'zh' ? '/zh' : ''}/research` },
+  { key: 'projects', href: `${base}${locale === 'zh' ? '/zh' : ''}/projects` },
+  { key: 'cv', href: `${base}${locale === 'zh' ? '/zh' : ''}/cv` },
+];
 ---
-<html lang={locale}><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/><link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`}/><SEO title={title?`${title} · ${name || 'Academic Profile'}`:undefined} description={profile.bio[locale] || t.profile}/></head><body><header class="mobile-header"><a href={home} class="mobile-name">{name || '[Your Name]'}</a><button aria-expanded="false" aria-controls="mobile-nav">{t.menu}</button></header><div class="site-shell"><Sidebar locale={locale} current={current}/><main><slot/></main></div><script is:inline>const b=document.querySelector('.mobile-header button');const n=document.querySelector('.sidebar');b?.addEventListener('click',()=>{const open=n?.classList.toggle('open');b.setAttribute('aria-expanded',String(open));});</script></body></html>
-<style is:global>:focus-visible{outline:2px solid var(--accent);outline-offset:3px}@media(max-width:700px){.sidebar.open{overflow-y:auto}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}</style>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <SEO title={title ? `${title} · ${name || 'Academic Homepage'}` : undefined} description={profile.bio[locale] || t.profile} />
+  </head>
+  <body>
+    <div class="site-frame">
+      <header class="site-header">
+        <div class="site-header-inner">
+          <a class="brand" href={home}><span class="brand-mark" aria-hidden="true">HCY</span><span class="brand-copy"><strong>{locale === 'zh' ? '洪陈源' : 'CHENYUAN HONG'}</strong><small>{locale === 'zh' ? '个人主页' : 'PERSONAL HOMEPAGE'}</small></span></a>
+          <nav class="primary-nav" aria-label={locale === 'zh' ? '主导航' : 'Primary navigation'}>
+            {primary.map(item => <a class:list={{ active: current === (item.key === 'home' ? 'profile' : item.key) }} href={item.href}>{item.key === 'home' ? (locale === 'zh' ? '首页' : 'Home') : t[item.key]}</a>)}
+            <span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)} aria-label={language.label}>{language.short}</a>)}</span>
+          </nav>
+          <details class="mobile-menu"><summary>{locale === 'zh' ? '菜单' : 'Menu'}</summary><div class="mobile-menu-panel">{primary.map(item => <a href={item.href}>{item.key === 'home' ? (locale === 'zh' ? '首页' : 'Home') : t[item.key]}</a>)}<span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)}>{language.short}</a>)}</span></div></details>
+        </div>
+      </header>
+      <main><slot /></main>
+      <footer class="site-footer"><span>{locale === 'zh' ? '洪陈源 · 个人主页' : 'Chenyuan Hong · Personal Homepage'}</span><span>{profile.email}</span></footer>
+    </div>
+  </body>
+</html>
+<style is:global>:focus-visible{outline:2px solid #003f88;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important}}</style>

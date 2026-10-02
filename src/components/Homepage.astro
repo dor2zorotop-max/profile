@@ -1,0 +1,64 @@
+---
+import type { Locale } from '../data/site';
+import { profile } from '../data/profile';
+import { research } from '../data/research';
+import { projects } from '../data/projects';
+import { competitions } from '../data/competitions';
+import { education } from '../data/education';
+import { honors } from '../data/honors';
+import { industry } from '../data/industry';
+import { publications } from '../data/publications';
+
+const { locale } = Astro.props as { locale: Locale };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const labels = locale === 'zh'
+  ? { biography: '个人简介', interests: '研究方向', experience: '科研经历', competitions: '比赛经历', projects: '项目经历', education: '教育背景', honors: '代表性荣誉', role: '角色', detail: '查看详情 →', preparing: '相关工程与产品开发经历正在整理中。' }
+  : { biography: 'Biography', interests: 'Research Interests', experience: 'Research Experience', competitions: 'Competitions', projects: 'Projects', education: 'Education', honors: '代表性荣誉', role: 'Role', detail: 'View details →', preparing: 'Selected engineering and product-development work is being prepared for publication.' };
+const tabs = [
+  { id: 'biography', label: labels.biography },
+  { id: 'research', label: labels.interests },
+  { id: 'experience', label: labels.experience },
+  { id: 'competitions', label: labels.competitions },
+  { id: 'projects', label: labels.projects },
+];
+const portrait = `${base}/media/images/profile-photo.jpg`;
+const profileTitle = locale === 'zh' ? '硕士研究生' : 'M.S. Student';
+const researchPapers = publications[locale].filter(item => item.projectSlug === 'reconfigurable-uav');
+---
+<div class="homepage">
+  <section class="profile-card" aria-label={locale === 'zh' ? '个人信息' : 'Profile information'}>
+    <div class="portrait-column"><img src={portrait} alt={locale === 'zh' ? '洪陈源证件照' : 'Portrait of Chenyuan Hong'} /></div>
+    <div class="identity-column"><h1>{locale === 'zh' ? profile.name : profile.nameEn}</h1><span class="degree-label">{profileTitle}</span><p class="identity-line">{profile.title[locale]}</p><p class="identity-line">{profile.affiliation[locale]}</p></div>
+    <div class="contact-column"><p><strong>{locale === 'zh' ? '单位' : 'Affiliation'}</strong>{profile.affiliation[locale]}</p>{profile.email && <p><strong>Email</strong><a href={`mailto:${profile.email}`}>{profile.email}</a></p>}<a class="quiet-cv-link" href={`${base}/${locale === 'zh' ? 'zh/' : ''}cv`}>{locale === 'zh' ? '查看简历 →' : 'View CV →'}</a></div>
+  </section>
+
+  <nav class="homepage-tabs" aria-label={locale === 'zh' ? '主页内容' : 'Homepage sections'}>
+    {tabs.map((tab, index) => <a href={`#${tab.id}`} data-tab={tab.id} aria-selected={index === 0}>{tab.label}</a>)}
+  </nav>
+
+  <div class="homepage-panels">
+    <section id="biography" class="homepage-panel" data-panel aria-labelledby="tab-biography"><h2 id="tab-biography">{labels.biography}</h2><p class="lead-copy">{profile.bio[locale]}</p><div class="education-line"><strong>{labels.education}</strong>{education[locale].map(item => <span>{item.period} · {item.institution} · {item.degree} · {item.field}</span>)}</div><div class="honors-line"><strong>{labels.honors}</strong>{honors[locale].map(item => <span>{item.year} · {item.title} ({item.note})</span>)}</div></section>
+
+    <section id="research" class="homepage-panel" data-panel aria-labelledby="tab-research" hidden><h2 id="tab-research">{labels.interests}</h2><div class="research-list">{research[locale].map(item => <article><h3>{item.title}</h3><p>{item.description}</p></article>)}</div></section>
+
+    <section id="experience" class="homepage-panel" data-panel aria-labelledby="tab-experience" hidden><h2 id="tab-experience">{labels.experience}</h2><div class="research-list project-list">{projects.map(project => <article><div class="item-period">{project.period[locale]}</div><h3>{project.title[locale]}</h3><p class="item-role">{labels.role}: {project.role[locale]}</p><p>{project.summary[locale]}</p>{project.slug === 'reconfigurable-uav' && researchPapers.length > 0 && <div class="representative-results"><strong>{locale === 'zh' ? '代表性成果' : 'Representative outputs'}</strong>{researchPapers.map(p => <span>{p.title} · {p.venue} · {p.status} · {p.contribution}</span>)}</div>}<a class="detail-link" href={`${base}${locale === 'zh' ? '/zh' : ''}/projects/${project.slug}`}>{labels.detail}</a></article>)}</div></section>
+
+    <section id="competitions" class="homepage-panel" data-panel aria-labelledby="tab-competitions" hidden><h2 id="tab-competitions">{labels.competitions}</h2><div class="research-list competition-list">{competitions[locale].map(item => <article><div class="item-period">{item.period}</div><h3>{item.competition}</h3><p><strong>{item.track}</strong> · {item.award}</p>{item.contribution && <p>{item.contribution}</p>}</article>)}</div></section>
+
+    <section id="projects" class="homepage-panel" data-panel aria-labelledby="tab-projects" hidden><h2 id="tab-projects">{labels.projects}</h2><p class="lead-copy">{industry[locale].length ? '' : labels.preparing}</p>{industry[locale].map(item => <article class="industry-item"><div class="item-period">{item.period}</div><h3>{item.title}</h3><p>{item.summary}</p></article>)}</section>
+  </div>
+</div>
+<script is:inline>
+  const tabLinks = [...document.querySelectorAll('[data-tab]')];
+  const panels = [...document.querySelectorAll('[data-panel]')];
+  const valid = new Set(tabLinks.map(link => link.dataset.tab));
+  const activate = (id, updateUrl = false) => {
+    const next = valid.has(id) ? id : 'biography';
+    tabLinks.forEach(link => link.setAttribute('aria-selected', String(link.dataset.tab === next)));
+    panels.forEach(panel => { panel.hidden = panel.id !== next; });
+    if (updateUrl) history.replaceState(null, '', `#${next}`);
+  };
+  tabLinks.forEach(link => link.addEventListener('click', event => { event.preventDefault(); activate(link.dataset.tab, true); }));
+  window.addEventListener('hashchange', () => activate(location.hash.slice(1)));
+  activate(location.hash.slice(1));
+</script>
