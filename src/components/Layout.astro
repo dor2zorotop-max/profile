@@ -26,7 +26,7 @@ const primary = [
     <div class="site-frame">
       <header class="site-header">
         <div class="site-header-inner">
-          <a class="brand" href={home}><span class="brand-mark" aria-hidden="true">HCY</span><span class="brand-copy"><strong>{locale === 'zh' ? '洪陈源' : 'CHENYUAN HONG'}</strong><small>{locale === 'zh' ? '个人主页' : 'PERSONAL HOMEPAGE'}</small></span></a>
+          <p class="header-motto">{locale === 'zh' ? '持续投资自我，认真对待每一次博弈' : 'Keep investing in yourself, and take every game seriously.'}</p>
           <nav class="primary-nav" aria-label={locale === 'zh' ? '主导航' : 'Primary navigation'}>
             {primary.map(item => <a class:list={{ active: current === 'profile' }} href={item.href}>{locale === 'zh' ? '首页' : 'Home'}</a>)}
             <span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)} aria-label={language.label}>{language.short}</a>)}</span>
@@ -35,7 +35,6 @@ const primary = [
         </div>
       </header>
       <main><slot /></main>
-      <footer class="site-footer"><span>{locale === 'zh' ? '洪陈源 · 个人主页' : 'Chenyuan Hong · Personal Homepage'}</span><span>{profile.email}</span></footer>
     </div>
   </body>
 <script is:inline>

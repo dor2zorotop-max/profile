@@ -5,7 +5,7 @@ import { research } from '../data/research';
 import { projects } from '../data/projects';
 import { competitions } from '../data/competitions';
 import { industry } from '../data/industry';
-import { publications } from '../data/publications';
+import { researchPreviews } from '../data/researchPreviews';
 
 const { locale } = Astro.props as { locale: Locale };
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -47,27 +47,20 @@ const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
     <section id="experience" class="homepage-panel" data-panel aria-labelledby="tab-experience" hidden>
       <h2 id="tab-experience">{labels.experience}</h2>
       <div class="research-list project-list">{projects.map(project => {
-        const findImage = (src: string) => project.heroImage === src ? { src, alt: project.title, caption: project.heroCaption ?? project.title } : project.gallery.find(item => item.src === src);
-        const findVideo = (src: string) => project.videos.find(item => item.src === src);
+        const preview = researchPreviews[project.slug];
         const detailUrl = `${base}${locale === 'zh' ? '/zh' : ''}/projects/${project.slug}/`;
-        return <article>
+        return <article class="research-preview">
           <div class="item-period">{project.period[locale]}</div>
           <h3>{project.title[locale]}</h3>
           <p class="item-role">{labels.role}: {project.role[locale]}</p>
-          <p>{project.summary[locale]}</p>
-          <div class="project-story">
-            {(project.homepageSections ?? []).map(section => {
-              const image = section.kind === 'image' ? findImage(section.src) : undefined;
-              const video = section.kind === 'video' ? findVideo(section.src) : undefined;
-              if (section.kind === 'text') return <section class="story-text"><h4>{section.heading[locale]}</h4><p>{section.body[locale]}</p></section>;
-              if (section.kind === 'image' && image) return <figure class="story-media story-image"><img loading="lazy" decoding="async" src={asset(image.src)} alt={image.alt[locale]} /><figcaption><strong>{section.heading[locale]}</strong><span>{image.caption[locale]}</span></figcaption></figure>;
-              if (section.kind === 'video' && video) return <figure class="story-media"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={asset(video.src)} type="video/mp4" /></video><figcaption><strong>{video.title[locale]}</strong><span>{video.caption[locale]}</span></figcaption></figure>;
-              return null;
-            })}
+          <div class="research-preview-body">
+            <p>{project.summary[locale]}</p>
+            <h4>{locale === 'zh' ? '核心技术工作' : 'Core Technical Work'}</h4>
+            <p>{preview.work[locale]}</p>
+            <figure class="research-preview-image"><img loading="lazy" decoding="async" src={asset(project.heroImage)} alt={(project.heroCaption ?? project.title)[locale]} /></figure>
+            <p class="homepage-result"><strong>{locale === 'zh' ? '代表性成果' : 'Representative Results'}</strong>{(preview.result ?? project.result)[locale]}</p>
           </div>
-          {project.result[locale] && <p class="homepage-result"><strong>{locale === 'zh' ? '代表性成果' : 'Representative Result'}</strong>{project.result[locale]}</p>}
-          {publications[locale].filter(item => item.projectSlug === project.slug).map(item => <p class="homepage-result"><strong>{item.title}</strong><span>{item.venue} · {item.status} · {item.contribution}</span></p>)}
-          <a class="detail-link" href={detailUrl}>{project.videos.length ? (locale === 'zh' ? '查看完整实验与视频 →' : 'View all experiments and videos →') : labels.detail}</a>
+          <div class="research-preview-fade"><a href={detailUrl} aria-label={`${locale === 'zh' ? '查看详情' : 'View Details'}: ${project.title[locale]}`}>{locale === 'zh' ? '查看详情' : 'View Details'}<span aria-hidden="true"> →</span></a></div>
         </article>;
       })}</div>
     </section>
@@ -77,10 +70,10 @@ const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
         <div class="item-period">{item.period}</div>
         <h3>{item.competition[locale]}</h3>
         {!item.subevents && <p class="competition-award"><strong>{item.track[locale]}</strong> · {item.award[locale]}</p>}
-        {item.certificate && <a class="certificate-link" href={asset(item.certificate.href)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(item.certificate.preview)} alt={item.certificate.alt[locale]} /><span>{locale === 'zh' ? '查看证书原件 →' : 'View certificate →'}</span></a>}
+        {item.certificate && <figure class="certificate-preview"><img loading="lazy" src={asset(item.certificate.preview)} alt={item.certificate.alt[locale]} /></figure>}
         {item.subevents ? <div class="competition-subevents">{item.subevents.map(sub => <section class="competition-subitem">
           <h4>{sub.title[locale]}</h4><p class="competition-award"><strong>{sub.award[locale]}</strong></p>
-          {sub.certificate && <a class="certificate-link" href={asset(sub.certificate.href)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(sub.certificate.preview)} alt={sub.certificate.alt[locale]} /><span>{locale === 'zh' ? '查看证书原件 →' : 'View certificate →'}</span></a>}
+          {sub.certificate && <figure class="certificate-preview"><img loading="lazy" src={asset(sub.certificate.preview)} alt={sub.certificate.alt[locale]} /></figure>}
           <p>{sub.contribution[locale]}</p>
           {sub.images.length > 0 && <div class="competition-images">{sub.images.map(src => <img loading="lazy" src={asset(src)} alt={sub.title[locale]} />)}</div>}
           {sub.videos?.map(video => <figure class="competition-video"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={video.src} type="video/mp4" /></video><figcaption>{video.title[locale]}</figcaption></figure>)}
@@ -89,7 +82,6 @@ const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
           {item.images.length > 0 && <div class="competition-images">{item.images.map(src => <img loading="lazy" src={asset(src)} alt={item.competition[locale]} />)}</div>}
           {item.videos && <div class="competition-videos">{item.videos.map(video => <figure class="competition-video"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={video.src} type="video/mp4" /></video><figcaption>{video.title[locale]}</figcaption></figure>)}</div>}
         </>}
-        {item.documents && <p class="industry-documents">{item.documents.map(doc => <a href={asset(doc.href)} target="_blank" rel="noreferrer">{doc.title[locale]} →</a>)}</p>}
         {item.related && <p class="related-link"><a href={`${base}${locale === 'zh' ? '/zh' : ''}/projects/reconfigurable-uav/`}>{item.related[locale]} →</a></p>}
       </article>)}</div>
     </section>
@@ -97,12 +89,11 @@ const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
       <h2 id="tab-projects">{labels.projects}</h2>
       <div class="industry-list">{industry[locale].map(item => <article class="industry-item">
         {item.period && <div class="item-period">{item.period}</div>}
-        <h3>{item.title}</h3><p class="industry-company">{item.company} · {item.role}</p><p>{item.summary}</p>
-        {item.images.length > 0 && <div class="industry-images">{item.images.slice(0,2).map(src => <img loading="lazy" src={asset(src)} alt={item.title} />)}</div>}
-        <h4>{locale === 'zh' ? '技术工作' : 'Technical Work'}</h4>
-        <ul>{item.responsibilities.map(text => <li>{text}</li>)}</ul>
-        {item.images.length > 2 && <div class="industry-images">{item.images.slice(2).map(src => <a href={asset(src)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(src)} alt={item.title} /></a>)}</div>}
-        {item.documents.length > 0 && <p class="industry-documents">{item.documents.map(doc => <a href={asset(doc.href)} target="_blank" rel="noreferrer">{doc.label[locale]} →</a>)}</p>}
+        <h3>{item.title}</h3><p class="industry-company">{item.company} · {item.role}</p>
+        <div class="industry-description">{(item.paragraphs ?? [item.summary]).map(text => <p>{text}</p>)}</div>
+        {!item.paragraphs && item.responsibilities.length > 0 && <><h4>{locale === 'zh' ? '技术工作' : 'Technical Work'}</h4><ul>{item.responsibilities.map(text => <li>{text}</li>)}</ul></>}
+        {item.images.length > 0 && <div class="industry-images">{item.images.map(src => <img loading="lazy" src={asset(src)} alt={item.title} />)}</div>}
+        {item.technologies.length > 0 && <p class="technology-line">{item.technologies.join(' · ')}</p>}
       </article>)}</div>
     </section>
   </div>
