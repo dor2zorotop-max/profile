@@ -15,7 +15,7 @@ const primary = [
   { key: 'home', href: home },
 ];
 const isProjectDetail = /^\/projects\/[^/]+/.test(pathWithoutLocale);
-const fallbackTab = backTab ?? (isProjectDetail ? 'experience' : current === 'projects' ? 'projects' : current === 'experience' ? 'experience' : current === 'research' ? 'research' : '');
+const fallbackTab = backTab ?? (isProjectDetail ? 'experience' : '');
 const fallbackHref = fallbackTab ? `${home}#${fallbackTab}` : home;
 ---
 <html lang={locale}>
@@ -38,7 +38,7 @@ const fallbackHref = fallbackTab ? `${home}#${fallbackTab}` : home;
         </div>
       </header>
       <main><slot /></main>
-      {current !== 'profile' && <a class="floating-back" data-back-home href={fallbackHref} aria-label={locale === 'zh' ? '返回上一页' : 'Go back'} title={locale === 'zh' ? '返回上一页' : 'Go back'}>←</a>}
+      {current !== 'profile' && <a class="floating-back" data-back-home data-site-base={base || '/'} href={fallbackHref} aria-label={locale === 'zh' ? '返回上一页' : 'Go back'} title={locale === 'zh' ? '返回上一页' : 'Go back'}>←</a>}
     </div>
   </body>
 <script is:inline>
@@ -56,8 +56,8 @@ const fallbackHref = fallbackTab ? `${home}#${fallbackTab}` : home;
     if (referrer) {
       try {
         const previous = new URL(referrer);
-        const basePath = new URL(document.baseURI).pathname.replace(/\/$/, '');
-        sameSite = previous.origin === location.origin && previous.pathname.startsWith(basePath);
+        const basePath = link.dataset.siteBase.replace(/\/$/, '');
+        sameSite = previous.origin === location.origin && (previous.pathname === basePath || previous.pathname.startsWith(`${basePath}/`));
       } catch {}
     }
     if (sameSite && history.length > 1) {
@@ -65,6 +65,19 @@ const fallbackHref = fallbackTab ? `${home}#${fallbackTab}` : home;
       history.back();
     }
   }));
+  const avoidMediaControls = () => {
+    const button = document.querySelector('[data-back-home]');
+    if (!button) return;
+    const b = button.getBoundingClientRect();
+    const overlaps = [...document.querySelectorAll('video')].some(video => {
+      const v = video.getBoundingClientRect();
+      return v.width > 0 && b.left < v.right && b.right > v.left && b.top < v.bottom && b.bottom > Math.max(v.top, v.bottom - 64);
+    });
+    button.style.visibility = overlaps ? 'hidden' : '';
+  };
+  window.addEventListener('scroll', avoidMediaControls, { passive: true });
+  window.addEventListener('resize', avoidMediaControls);
+  window.addEventListener('load', avoidMediaControls);
 </script>
 </html>
 <style is:global>:focus-visible{outline:2px solid #003f88;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important}}</style>
