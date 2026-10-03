@@ -15,7 +15,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'reconfigurable-uav', order: 1, period: { zh: '2025.06 – 至今', en: '2025.06 – Present' }, year: '2025',
+    slug: 'reconfigurable-uav', order: 1, period: { zh: '2025.06~至今', en: '2025.06~Present' }, year: '2025',
     title: { zh: '基于 ORB-SLAM3 纯视觉定位的可重构无人机系统', en: 'Reconfigurable UAV System with ORB-SLAM3 Visual-Only Localization' }, type: { zh: '持续研究课题', en: 'Ongoing research project' }, role: { zh: '主要研究成员', en: 'Core research team member' },
     summary: { zh: '面向 GNSS 受限环境下的多机自主协同、空中组合与构型重构，研究机载双目视觉定位、并行对接轨迹、主动机械锁合与组合飞行控制。', en: 'This project addresses multi-UAV autonomy, aerial assembly, and configuration changes in GNSS-constrained environments through onboard stereo localization, parallel docking trajectories, active mechanical locking, and combined-flight control.' },
     overview: { zh: '课题面向室内巡检、协同运输和应急抵近等任务中单架无人机载荷、续航与构型受限的问题，构建基于机载双目视觉定位的可重构四旋翼系统。系统由单机飞行、视觉定位、轨迹生成、多机控制、外挡板—夹爪式机械对接和状态管理模块组成，可完成单机独立飞行、多机并行接近、相对位姿计算、主动锁合、组合飞行、主动释放与安全分离。纯视觉定位指 SLAM 位姿估计不依赖 GNSS、动作捕捉、激光雷达或外部定位基站，飞控内环仍使用 IMU 完成姿态稳定。', en: 'The project addresses the limited payload, endurance, and configuration flexibility of individual UAVs in indoor inspection, cooperative transport, and emergency approach tasks. It develops a reconfigurable quadrotor system based on onboard stereo visual localization. The system integrates single-UAV flight, visual localization, trajectory generation, multi-UAV control, an outer-baffle and claw-based docking mechanism, and state management, enabling independent flight, parallel approach, relative-pose estimation, active locking, combined flight, active release, and safe separation. Here, visual-only localization means that the SLAM pose estimate does not depend on GNSS, motion capture, LiDAR, or external beacons; the flight-controller IMU remains available for attitude stabilization.' },
@@ -54,7 +54,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'autonomous-landing', order: 2, period: { zh: '2025.12 – 至今', en: '2025.12 – Present' }, year: '2025',
+    slug: 'autonomous-landing', order: 2, period: { zh: '2025.12~至今', en: '2025.12~Present' }, year: '2025',
     title: { zh: '面向智能捕获式降落平台的四旋翼空地协同视觉引导与自主对接研究', en: 'Air-Ground Visual Guidance and Autonomous Quadrotor Docking with an Intelligent Capture Landing Platform' }, type: { zh: '硕士课题', en: "Master's research project" }, role: { zh: '独立负责', en: 'Independent lead' },
     summary: { zh: '研究基于 ORB-SLAM3 的视觉状态估计与空地协同对接方法，构建无人机、NUC 智能降落平台和主动捕获机构组成的协同系统。', en: 'Research on ORB-SLAM3-based visual state estimation and air-ground coordinated docking, integrating a UAV, a NUC-based intelligent landing platform, and an active capture mechanism.' },
     overview: { zh: '课题针对四旋翼降落过程中的定位漂移、平台偏航不对准和落地后易受扰动等问题，研究由无人机、NUC 智能降落平台和主动捕获机构组成的空地协同系统。', en: 'The project studies an air-ground coordinated system composed of a UAV, a NUC-based intelligent landing platform, and an active capture mechanism, addressing localization drift, platform-yaw misalignment, and post-touchdown disturbance during quadrotor landing.' },
@@ -70,7 +70,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'exoskeleton', order: 3, period: { zh: '2023.09 – 2024.06', en: '2023.09 – 2024.06' }, year: '2023',
+    slug: 'exoskeleton', order: 3, period: { zh: '2023.09~2024.06', en: '2023.09~2024.06' }, year: '2023',
     title: { zh: '一种基于柔性驱动的仿生下肢外骨骼机器人', en: 'Bioinspired Lower-Limb Exoskeleton Robot with Compliant Actuation' }, type: { zh: '国家级大学生创新项目', en: 'National undergraduate innovation project' }, role: { zh: '项目负责人', en: 'Project lead' },
     summary: { zh: '面向下肢运动障碍患者的行走助力需求，研究柔性驱动外骨骼的非线性建模、力跟踪与机械结构设计。', en: 'Research on nonlinear modeling, force tracking, and mechanical design of a compliant-actuation exoskeleton to assist walking for people with lower-limb mobility impairments.' },
     overview: { zh: '项目面向下肢运动障碍患者的行走助力需求，设计基于柔性驱动的仿生下肢外骨骼机器人，以缓解传统刚性驱动在输出力矩、控制精度、重量和人机交互安全之间的矛盾。项目围绕非线性变刚度弹性驱动器、绳驱动实验平台和力矩建模展开。', en: 'The project develops a bioinspired lower-limb exoskeleton with compliant actuation for walking assistance, addressing the trade-off between output torque, control accuracy, weight, and human-robot safety in rigidly driven systems. The work covers a nonlinear variable-stiffness elastic actuator, a cable-driven experimental platform, and torque modeling.' },

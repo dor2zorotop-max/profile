@@ -57,8 +57,19 @@ html[lang="zh"] .lead-copy{text-align:justify;text-justify:inter-ideograph;text-
 .industry-images{display:block;max-width:520px;margin:24px auto}
 .industry-images img{width:auto;max-width:100%;height:auto;margin:0 auto}
 .technology-line{max-width:none;font-size:13px;line-height:1.9;margin-top:20px}
-.timeline-period,.item-period,.year{font-family:inherit}
+.industry-architecture{margin-top:24px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.industry-architecture h4{margin:0 0 10px}
+.industry-architecture p{display:grid;gap:2px;max-width:none;margin:0;color:var(--text);font-size:14px;line-height:1.65}
+.industry-architecture p span{display:block}
+.industry-architecture p .architecture-break{text-align:center;color:var(--muted);line-height:1.1}
+.industry-architecture small{display:block;margin-top:10px;color:var(--muted);font-size:12px}
+.floating-back{position:fixed;right:28px;bottom:28px;z-index:10;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--blue);color:#fff;font-size:24px;line-height:1;box-shadow:0 3px 10px rgba(0,0,0,.18);text-decoration:none;transition:background .15s ease}
+.floating-back:hover{background:var(--blue-dark);color:#fff;text-decoration:none}
+.floating-back:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.timeline-period,.item-period,.year{font-family:inherit;white-space:nowrap}
 .competition-images img{height:auto;max-height:none;align-self:start}
 figure,.media-block,.story-media,.representative-media,.research-preview-image,.competition-images,.industry-images{background:transparent;border:0;box-shadow:none}
 figure img,.media-block img,.story-media img,.representative-media img,.competition-images img,.industry-images img{display:block;max-width:100%;height:auto;background:transparent;border:0;box-shadow:none;border-radius:0;aspect-ratio:auto}
 @media(max-width:768px){.site-header-inner{gap:16px;padding-top:12px;padding-bottom:12px}.header-motto{flex:1}.mobile-menu{flex-shrink:0}.mobile-menu-panel{top:calc(100% + 12px);right:0}.research-preview-body{max-height:960px}.competition-subitem h4{font-weight:600}}
+@media(max-width:768px){.floating-back{right:16px;bottom:16px;width:44px;height:44px}}
+@media(max-width:768px){.timeline-period,.item-period,.year{white-space:normal}}

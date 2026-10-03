@@ -16,13 +16,13 @@ export const profile = {
   researchInterests: { zh: ['可重构无人机', '飞行器控制', '视觉SLAM与多机器人自主协同'], en: ['Reconfigurable UAVs', 'Flight Control', 'Visual SLAM and Multi-Robot Autonomy'] } as Record<Locale, string[]>,
   academicExperience: { zh: [
     { period: '2021.09~2022.06', text: '分别在浙江工业大学健行荣誉学院智能实验班、机械工程学院机器人工程专业同时就读，随后转入自动化专业。' },
+    { period: '2024.08~至今', text: '保研至电子科技大学（UESTC）控制科学与工程专业攻读硕士学位。' },
+    { period: '2025.04~2026.03', text: '杭州叮当葫芦互联网数据服务有限公司技术中心硬件开发工程师' },
     { period: '2025.06', text: '分别在浙江工业大学信息工程学院、健行荣誉学院获学士学位、健行荣誉证书。' },
-    { period: '2024.08-至今', text: '保研至电子科技大学（UESTC）控制科学与工程专业攻读硕士学位。' },
-    { period: '2025.04-2026.03', text: '杭州叮当葫芦互联网数据服务有限公司技术中心硬件开发工程师' },
   ], en: [
     { period: '2021.09~2022.06', text: 'Studied concurrently in the Intelligent Experimental Class of Jianxing Honors College and the Robotics Engineering program of the College of Mechanical Engineering at Zhejiang University of Technology, then transferred to Automation.' },
+    { period: '2024.08~Present', text: 'Admitted through recommendation to the M.S. program in Control Science and Engineering at the University of Electronic Science and Technology of China (UESTC).' },
+    { period: '2025.04~2026.03', text: 'Hardware Development Engineer, Technology Center, Hangzhou Dingdang Hulu Internet Data Services Co., Ltd.' },
     { period: '2025.06', text: 'Received a bachelor\'s degree from the College of Information Engineering and a Jianxing Honors Certificate from Zhejiang University of Technology.' },
-    { period: '2024.08-Present', text: 'Admitted through recommendation to the M.S. program in Control Science and Engineering at the University of Electronic Science and Technology of China (UESTC).' },
-    { period: '2025.04-2026.03', text: 'Hardware Development Engineer, Technology Center, Hangzhou Dingdang Hulu Internet Data Services Co., Ltd.' },
   ] } as Record<Locale, { period: string; text: string }[]>,
 };

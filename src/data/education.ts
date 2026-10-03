@@ -5,7 +5,7 @@ const entries = [
   { start: '2021.09', end: '2025.06', institution: { zh: '浙江工业大学', en: 'Zhejiang University of Technology' }, school: { zh: '健行荣誉学院 · 信息工程学院', en: 'Jianxing Honors College · College of Information Engineering' }, degree: { zh: '本科', en: "Bachelor's degree" }, field: { zh: '自动化', en: 'Automation' } },
 ];
 const forLocale = (locale: Locale): EducationItem[] => entries.map(({ start, end, institution, school, degree, field }) => ({
-  period: `${start} – ${end || (locale === 'zh' ? '至今' : 'Present')}`,
+  period: `${start}${end ? `~${end}` : `~${locale === 'zh' ? '至今' : 'Present'}`}`,
   institution: institution[locale], school: school[locale], degree: degree[locale], field: field[locale],
 }));
 export const education: Record<Locale, EducationItem[]> = { zh: forLocale('zh'), en: forLocale('en') };

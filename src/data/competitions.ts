@@ -19,7 +19,7 @@ export type Competition = {
 
 const entries: Competition[] = [
   {
-    period: '2023.11 – 2024.05',
+    period: '2023.11~2024.05',
     competition: { zh: '中国机器人大赛暨 RoboCup 机器人世界杯中国赛', en: 'China Robot Competition & RoboCup China Open' },
     track: { zh: '两个参赛组别', en: 'Two competition tracks' },
     award: { zh: '国家级奖项', en: 'National-level awards' },
@@ -31,7 +31,7 @@ const entries: Competition[] = [
     ],
   },
   {
-    period: '2022.08 – 2024.08',
+    period: '2022.08~2024.08',
     competition: { zh: '第十九届全国大学生智能汽车竞赛', en: '19th National University Intelligent Vehicle Competition' },
     track: { zh: '百度智慧交通组', en: 'Baidu Intelligent Transportation Track' },
     award: { zh: '国家一等奖 · 全国第七', en: 'National First Prize · Seventh place nationally' },
@@ -41,7 +41,7 @@ const entries: Competition[] = [
     images: ['/media/competitions/intelligent-vehicle/baidu competition picture.jpg', '/media/competitions/intelligent-vehicle/driver board.jpg', '/media/competitions/intelligent-vehicle/main control board.jpg'],
   },
   {
-    period: '2026.03 – 2026.08',
+    period: '2026.03~2026.08',
     competition: { zh: '第二十一届中国研究生电子设计竞赛', en: '21st China Postgraduate Electronics Design Competition' },
     track: { zh: '纯视觉定位的四旋翼无人机组合飞行', en: 'Combined Quadrotor Flight with Visual-Only Localization' },
     award: { zh: '国家三等奖', en: 'National Third Prize' },

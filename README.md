@@ -27,6 +27,8 @@ npm run dev
 
 The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). The English pages follow the Chinese content in the existing bilingual data files. Dates, publication metadata, and award facts are shared across locales; translate text fields in place. The language switcher displays `EN / 中文` and preserves the current section where possible.
 
+Date ranges in data sources use the half-width `~` separator (`2025.06~Present`, `2025.06~至今`). Technical hyphenated terms such as `multi-UAV` and `closed-loop` are not date ranges. Non-homepage pages expose a fixed circular back arrow; same-site referrers use `history.back()`, while direct entries fall back to the relevant homepage tab.
+
 The homepage is a single academic personal homepage rather than a CV navigation page. Its profile card and five hash-based tabs (`#biography`, `#research`, `#experience`, `#competitions`, `#projects`) are rendered from profile, research, project, competition, and industry data. The primary header exposes Home and the language switcher; the tabs are the content navigation. Empty data is rendered as a restrained empty state rather than a placeholder card.
 
 Research media directories:

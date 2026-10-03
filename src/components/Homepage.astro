@@ -92,6 +92,7 @@ const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
         <h3>{item.title}</h3><p class="industry-company">{item.company} · {item.role}</p>
         <div class="industry-description">{(item.paragraphs ?? [item.summary]).map(text => <p>{text}</p>)}</div>
         {!item.paragraphs && item.responsibilities.length > 0 && <><h4>{locale === 'zh' ? '技术工作' : 'Technical Work'}</h4><ul>{item.responsibilities.map(text => <li>{text}</li>)}</ul></>}
+        {item.architecture && <div class="industry-architecture"><h4>{locale === 'zh' ? '硬件架构' : 'Hardware Architecture'}</h4><p>{item.architecture.map((line, index) => <span class:list={{ 'architecture-break': line === '↕', 'architecture-last': index === item.architecture!.length - 1 }}>{line}</span>)}</p><small>{locale === 'zh' ? 'Hardware concept / system architecture' : 'Hardware concept / system architecture'}</small></div>}
         {item.images.length > 0 && <div class="industry-images">{item.images.map(src => <img loading="lazy" src={asset(src)} alt={item.title} />)}</div>}
         {item.technologies.length > 0 && <p class="technology-line">{item.technologies.join(' · ')}</p>}
       </article>)}</div>
