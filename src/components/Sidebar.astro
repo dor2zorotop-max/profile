@@ -1,5 +1,14 @@
 ---
-import {languages,type Locale} from '../data/site'; import {copy,nav} from '../data/content'; import {profile} from '../data/profile'; import {existsSync} from 'node:fs';
-const {locale,current}=Astro.props as {locale:Locale;current:string}; const t=copy[locale]; const label=(key:string)=>t[key]??key; const cvFile=locale==='zh'?'public/cv/cv-zh.pdf':'public/cv/cv-en.pdf'; const hasCv=existsSync(cvFile); const base=import.meta.env.BASE_URL.replace(/\/$/,''); const prefix=locale==='en'?'':`/zh`; const path=Astro.url.pathname.replace(new RegExp(`^${base}${prefix}`),'') || '/'; const route=(item:string)=>`${base}${prefix}/${item==='profile'?'':item}`.replace(/\/$/,'/') ; const languagePath=(target:Locale)=>target==='en'?`${base}${path}`:`${base}/zh${path==='/'?'/':path}`; const name=locale==='en'?profile.nameEn:profile.shortName||profile.name;
+import { languages, type Locale } from '../data/site';
+import { copy } from '../data/content';
+import { profile } from '../data/profile';
+const { locale, current } = Astro.props as { locale: Locale; current: string };
+const t = copy[locale];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const home = locale === 'en' ? `${base}/` : `${base}/zh/`;
 ---
-<aside class="sidebar" id="mobile-nav"><div class="identity"><strong>{name||'[Your Name]'}</strong>{profile.title[locale]&&<span>{profile.title[locale]}</span>}</div><nav aria-label="Primary navigation">{nav.map(item=><a class:list={{active:current===item}} href={route(item)}>{label(item)}</a>)}</nav><div class="sidebar-foot"><div class="language-switcher" aria-label="Language switcher">{Object.entries(languages).map(([key,lang])=><a class:list={{active:locale===key}} aria-label={lang.label} href={languagePath(key as Locale)}>{lang.short}</a>)}</div><div class="external">{hasCv&&<a href={`${base}/cv/${locale==='zh'?'cv-zh':'cv-en'}.pdf`}>CV</a>}{profile.github&&<a href={profile.github}>GitHub</a>}{profile.email&&<a href={`mailto:${profile.email}`}>Email</a>}</div></div></aside>
+<aside class="sidebar" id="mobile-nav">
+  <div class="identity"><strong>{locale === 'en' ? profile.nameEn : profile.name}</strong><span>{profile.title[locale]}</span></div>
+  <nav aria-label={locale === 'zh' ? '主导航' : 'Primary navigation'}><a class:list={{ active: current === 'profile' }} href={home}>{locale === 'zh' ? '首页' : 'Home'}</a></nav>
+  <div class="sidebar-foot"><div class="language-switcher" aria-label={locale === 'zh' ? '语言切换' : 'Language switcher'}>{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={key === 'en' ? `${base}/` : `${base}/zh/`}>{language.short}</a>)}</div><div class="external">{profile.github && <a href={profile.github}>GitHub</a>}{profile.email && <a href={`mailto:${profile.email}`}>{t.email}</a>}</div></div>
+</aside>

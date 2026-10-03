@@ -1,9 +1,58 @@
 import type { Locale } from './site';
-export type Competition = { period: string; competition: string; track: string; award: string; contribution: string };
-const entries = [
-  { period: '2023.11 – 2024.05', competition: { zh: '中国机器人大赛暨 RoboCup 机器人世界杯中国赛', en: 'China Robot Competition & RoboCup China Open' }, track: { zh: '无人机挑战赛', en: 'UAV Challenge' }, award: { zh: '国家一等奖 · 冠军', en: 'National First Prize · Champion' }, contribution: { zh: '负责多环 PID 调节、视觉标定与去畸变、移动目标跟踪，以及 A* 与 EGO-Planner 路径规划和避障优化。', en: 'Responsible for multi-loop PID tuning, camera calibration and distortion correction, moving-target tracking, and A* and EGO-Planner path planning and obstacle avoidance optimization.' } },
-  { period: '2022.08 – 2024.08', competition: { zh: '第十九届全国大学生智能汽车竞赛', en: '19th National University Intelligent Vehicle Competition' }, track: { zh: '百度智慧交通组', en: 'Baidu Intelligent Transportation Track' }, award: { zh: '国家一等奖', en: 'National First Prize' }, contribution: { zh: '负责轮式里程计与惯性导航定位、yaw 闭环调整、CNN 偏差模型自主巡航，以及车模机械结构和主控板设计。', en: 'Responsible for localization using wheel odometry and inertial navigation, closed-loop yaw adjustment, autonomous navigation with a CNN deviation model, and the vehicle model’s mechanical structure and main control board.' } },
-  { period: '2026.03 – 2026.08', competition: { zh: '第二十一届中国研究生电子设计竞赛', en: '21st China Postgraduate Electronics Design Competition' }, track: { zh: '纯视觉定位的四旋翼无人机组合飞行', en: 'Combined Quadrotor Flight with Visual-Only Localization' }, award: { zh: '国家三等奖', en: 'National Third Prize' }, contribution: { zh: '', en: '' } },
+
+export type Localized = { zh: string; en: string };
+export type CompetitionCertificate = { href: string; preview: string; alt: Localized };
+export type CompetitionVideo = { src: string; poster: string; title: Localized };
+export type CompetitionDocument = { href: string; title: Localized };
+export type CompetitionSubevent = { title: Localized; award: Localized; contribution: Localized; certificate?: CompetitionCertificate; images: string[]; videos?: CompetitionVideo[] };
+export type Competition = {
+  period: string;
+  competition: Localized;
+  track: Localized;
+  award: Localized;
+  contribution: Localized;
+  certificate?: CompetitionCertificate;
+  images: string[];
+  subevents?: CompetitionSubevent[];
+  related?: Localized;
+  videos?: CompetitionVideo[];
+  documents?: CompetitionDocument[];
+};
+
+const entries: Competition[] = [
+  {
+    period: '2023.11 – 2024.05',
+    competition: { zh: '中国机器人大赛暨 RoboCup 机器人世界杯中国赛', en: 'China Robot Competition & RoboCup China Open' },
+    track: { zh: '两个参赛组别', en: 'Two competition tracks' },
+    award: { zh: '国家级奖项', en: 'National-level awards' },
+    contribution: { zh: '', en: '' },
+    images: [],
+    subevents: [
+      { title: { zh: '无人机挑战赛', en: 'UAV Challenge' }, award: { zh: '国家一等奖 · 全国冠军', en: 'National First Prize · National Champion' }, contribution: { zh: '负责多环 PID 调节、视觉标定与去畸变、移动目标跟踪，以及 A* 与 EGO-Planner 路径规划和避障优化。', en: 'Responsible for multi-loop PID tuning, camera calibration and distortion correction, moving-target tracking, and A* and EGO-Planner path planning and obstacle-avoidance optimization.' }, certificate: { href: '/media/competitions/robocup-uav/国家一等奖（冠军）获奖证书.pdf', preview: '/media/competitions/previews/robocup-uav-national-first-prize.png', alt: { zh: '无人机挑战赛国家一等奖证书', en: 'National First Prize certificate for the UAV Challenge' } }, images: [], videos: [{ src: 'https://github.com/dor2zorotop-max/profile/releases/download/research-media-v1/robocup-uav-obstacle-target.mp4', poster: '/media/competitions/previews/robocup-uav-obstacle-target.jpg', title: { zh: '国赛记录：避障与投靶', en: 'National Competition: Obstacle Avoidance and Target Drop' } },{ src: 'https://github.com/dor2zorotop-max/profile/releases/download/research-media-v1/robocup-uav-corridor.mp4', poster: '/media/competitions/previews/robocup-uav-corridor.jpg', title: { zh: '国赛记录：穿廊', en: 'National Competition: Corridor Flight' } }] },
+      { title: { zh: '水下作业赛', en: 'Underwater Operation' }, award: { zh: '国家三等奖', en: 'National Third Prize' }, contribution: { zh: '以核心队员身份参与水下作业赛。作品面向水下垃圾识别与回收，将 YOLOv5 目标检测与自主设计的两轴机械臂结合，实现水下目标识别、俯仰与抓取。', en: 'Participated as a core team member in the Underwater Operation track. The ROV combines YOLOv5 detection with a custom two-axis manipulator for underwater waste identification, pitch motion, and grasping.' }, certificate: { href: '/media/competitions/underwater robot/国家三等奖获奖证书.pdf', preview: '/media/competitions/previews/underwater-national-third-prize.png', alt: { zh: '水下作业赛国家三等奖证书', en: 'National Third Prize certificate for the Underwater Operation track' } }, images: ['/media/competitions/underwater robot/underwater-rov-design.png', '/media/competitions/underwater robot/underwater-system-diagram.png'] },
+    ],
+  },
+  {
+    period: '2022.08 – 2024.08',
+    competition: { zh: '第十九届全国大学生智能汽车竞赛', en: '19th National University Intelligent Vehicle Competition' },
+    track: { zh: '百度智慧交通组', en: 'Baidu Intelligent Transportation Track' },
+    award: { zh: '国家一等奖 · 全国第七', en: 'National First Prize · Seventh place nationally' },
+    contribution: { zh: '负责轮式里程计与惯性导航定位、yaw 闭环与 PID 调整、CNN 偏差模型自主巡航，以及车辆机械结构、主控板与 FOC 相关设计。', en: 'Responsible for wheel-odometry and inertial-navigation localization, closed-loop yaw and PID tuning, autonomous navigation with a CNN deviation model, and the vehicle mechanical structure, main control board, and FOC-related design.' },
+    certificate: { href: '/media/competitions/intelligent-vehicle/奖状.pdf', preview: '/media/competitions/previews/intelligent-vehicle-national-first-prize.png', alt: { zh: '智能汽车竞赛国家一等奖证书', en: 'National First Prize certificate for the intelligent vehicle competition' } },
+    videos: [{ src: 'https://github.com/dor2zorotop-max/profile/releases/download/research-media-v1/intelligent-vehicle-national-debugging.mp4', poster: '/media/competitions/previews/intelligent-vehicle-national-debugging.jpg', title: { zh: '百度组国赛调试现场', en: 'Baidu Track National Competition Debugging' } },{ src: 'https://github.com/dor2zorotop-max/profile/releases/download/research-media-v1/intelligent-vehicle-provincial-offroad.mp4', poster: '/media/competitions/previews/intelligent-vehicle-provincial-offroad.jpg', title: { zh: '省赛极速越野组', en: 'Provincial Competition: High-Speed Off-Road Track' } },{ src: 'https://github.com/dor2zorotop-max/profile/releases/download/research-media-v1/intelligent-vehicle-offroad.mp4', poster: '/media/competitions/previews/intelligent-vehicle-offroad.jpg', title: { zh: '极速越野组演示', en: 'High-Speed Off-Road Demonstration' } }],
+    documents: [{ href: '/media/competitions/intelligent-vehicle/技术报告.pdf', title: { zh: '技术报告', en: 'Technical Report' } }],
+    images: ['/media/competitions/intelligent-vehicle/baidu competition picture.jpg', '/media/competitions/intelligent-vehicle/driver board.jpg', '/media/competitions/intelligent-vehicle/main control board.jpg'],
+  },
+  {
+    period: '2026.03 – 2026.08',
+    competition: { zh: '第二十一届中国研究生电子设计竞赛', en: '21st China Postgraduate Electronics Design Competition' },
+    track: { zh: '纯视觉定位的四旋翼无人机组合飞行', en: 'Combined Quadrotor Flight with Visual-Only Localization' },
+    award: { zh: '国家三等奖', en: 'National Third Prize' },
+    contribution: { zh: '参赛作品以纯视觉定位支撑四旋翼组合飞行，完成系统集成与作品展示。', en: 'The entry integrates visual-only localization with combined quadrotor flight, including system integration and demonstration.' },
+    documents: [{ href: '/media/competitions/cpgdec/答辩PPT.pdf', title: { zh: '答辩材料', en: 'Competition Presentation' } }],
+    images: ['/media/competitions/cpgdec/real1.jpg', '/media/competitions/cpgdec/real2.jpg', '/media/competitions/cpgdec/门型展架.png'],
+    related: { zh: '相关技术工作见科研经历。', en: 'Related technical work is documented in the research experience.' },
+  },
 ];
-const forLocale = (locale: Locale): Competition[] => entries.map(({ period, competition, track, award, contribution }) => ({ period, competition: competition[locale], track: track[locale], award: award[locale], contribution: contribution[locale] }));
-export const competitions: Record<Locale, Competition[]> = { zh: forLocale('zh'), en: forLocale('en') };
+
+export const competitions: Record<Locale, Competition[]> = { zh: entries, en: entries };

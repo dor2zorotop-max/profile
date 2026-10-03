@@ -13,9 +13,6 @@ const pathWithoutLocale = pathname.replace(/^\/zh(?=\/|$)/, '') || '/';
 const localizedPath = (target: Locale) => target === 'en' ? `${base}${pathWithoutLocale === '/' ? '/' : pathWithoutLocale}` : `${base}/zh${pathWithoutLocale === '/' ? '/' : pathWithoutLocale}`;
 const primary = [
   { key: 'home', href: home },
-  { key: 'research', href: `${base}${locale === 'zh' ? '/zh' : ''}/research` },
-  { key: 'projects', href: `${base}${locale === 'zh' ? '/zh' : ''}/projects` },
-  { key: 'cv', href: `${base}${locale === 'zh' ? '/zh' : ''}/cv` },
 ];
 ---
 <html lang={locale}>
@@ -31,15 +28,25 @@ const primary = [
         <div class="site-header-inner">
           <a class="brand" href={home}><span class="brand-mark" aria-hidden="true">HCY</span><span class="brand-copy"><strong>{locale === 'zh' ? '洪陈源' : 'CHENYUAN HONG'}</strong><small>{locale === 'zh' ? '个人主页' : 'PERSONAL HOMEPAGE'}</small></span></a>
           <nav class="primary-nav" aria-label={locale === 'zh' ? '主导航' : 'Primary navigation'}>
-            {primary.map(item => <a class:list={{ active: current === (item.key === 'home' ? 'profile' : item.key) }} href={item.href}>{item.key === 'home' ? (locale === 'zh' ? '首页' : 'Home') : t[item.key]}</a>)}
+            {primary.map(item => <a class:list={{ active: current === 'profile' }} href={item.href}>{locale === 'zh' ? '首页' : 'Home'}</a>)}
             <span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)} aria-label={language.label}>{language.short}</a>)}</span>
           </nav>
-          <details class="mobile-menu"><summary>{locale === 'zh' ? '菜单' : 'Menu'}</summary><div class="mobile-menu-panel">{primary.map(item => <a href={item.href}>{item.key === 'home' ? (locale === 'zh' ? '首页' : 'Home') : t[item.key]}</a>)}<span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)}>{language.short}</a>)}</span></div></details>
+          <details class="mobile-menu"><summary>{locale === 'zh' ? '菜单' : 'Menu'}</summary><div class="mobile-menu-panel">{primary.map(item => <a href={item.href}>{locale === 'zh' ? '首页' : 'Home'}</a>)}<span class="language-links">{Object.entries(languages).map(([key, language]) => <a class:list={{ active: locale === key }} href={localizedPath(key as Locale)}>{language.short}</a>)}</span></div></details>
         </div>
       </header>
       <main><slot /></main>
       <footer class="site-footer"><span>{locale === 'zh' ? '洪陈源 · 个人主页' : 'Chenyuan Hong · Personal Homepage'}</span><span>{profile.email}</span></footer>
     </div>
   </body>
+<script is:inline>
+  const preserveSection = () => document.querySelectorAll('.language-links a').forEach(link => {
+    const target = new URL(link.href);
+    target.hash = location.hash;
+    link.href = target.href;
+  });
+  preserveSection();
+  window.addEventListener('hashchange', preserveSection);
+  document.querySelectorAll('.language-links a').forEach(link => link.addEventListener('click', preserveSection));
+</script>
 </html>
 <style is:global>:focus-visible{outline:2px solid #003f88;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important}}</style>

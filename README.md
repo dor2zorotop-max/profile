@@ -19,13 +19,15 @@ npm run dev
 - Publications: `src/data/publications.ts`
 - Competitions: `src/data/competitions.ts`
 - Honors: `src/data/honors.ts`
-- Industry collaboration placeholder: `src/data/industry.ts`
-- Images: project paths point into `public/media/research/` or `public/media/industry/`; research MP4 files are stored locally under `.private/media-source/research/` and served from the GitHub Release `research-media-v1`.
-- CV: `public/cv/cv-zh.pdf` and `public/cv/cv-en.pdf` are the published files; each language only links to its own PDF. Keep editable source documents outside `public/` (the local `cv-source/` directory is ignored by Git).
+- Industry projects: `src/data/industry.ts` (the two supplied company names and supplied engineering materials)
+- Images: project paths point into `public/media/research/` or `public/media/industry/`; research MP4 files are served from the GitHub Release `research-media-v1`.
+- Competition certificates and previews: `public/media/competitions/` and `public/media/competitions/previews/`.
+- Research video posters: `public/media/research/video-posters/`. Each poster is generated from the corresponding video's first frame.
+- CV source PDFs may remain in `public/cv/` for archival compatibility, but the visible site does not expose a CV link or download button; the former `/cv/` and `/zh/cv/` routes redirect to the corresponding biography. Keep editable source documents outside `public/` (the local `cv-source/` directory is ignored by Git).
 
 The site supports English at the root (`/`, `/projects`, `/research`, ...) and Simplified Chinese under `/zh/` (`/zh/`, `/zh/projects`, `/zh/research`, ...). The English pages follow the Chinese content in the existing bilingual data files. Dates, publication metadata, and award facts are shared across locales; translate text fields in place. The language switcher displays `EN / 中文` and preserves the current section where possible.
 
-The homepage is a single academic personal homepage rather than a CV navigation page. Its profile card and five hash-based tabs (`#biography`, `#research`, `#experience`, `#competitions`, `#projects`) are rendered from the existing profile, research, project, competition, education, honors, and publication data. The older routes remain available for existing links, while the primary header only exposes Home, Research, Projects, CV, and the language switcher.
+The homepage is a single academic personal homepage rather than a CV navigation page. Its profile card and five hash-based tabs (`#biography`, `#research`, `#experience`, `#competitions`, `#projects`) are rendered from profile, research, project, competition, and industry data. The primary header exposes Home and the language switcher; the tabs are the content navigation. Empty data is rendered as a restrained empty state rather than a placeholder card.
 
 Research media directories:
 
@@ -35,10 +37,12 @@ Research media directories:
 
 Industry media directory: `public/media/industry/`
 
-Large research videos are intentionally kept out of the Pages repository. The public video assets are uploaded to the repository release [Research Media](https://github.com/dor2zorotop-max/profile/releases/tag/research-media-v1) with stable English filenames, while `src/data/projects.ts` keeps the structured title, category, caption, poster, and release URL for each video. Keep source videos, private documents, and other unpublished material inside `.private/`; this directory is ignored by Git.
+Large research videos are intentionally kept out of the Pages repository. The public video assets are uploaded to the repository release [Research Media](https://github.com/dor2zorotop-max/profile/releases/tag/research-media-v1) with stable English filenames, while `src/data/projects.ts` keeps the structured title, category, caption, poster, and release URL for each video. The single-UAV representative video and five supplied competition videos are also stored in that release. All videos retain their original quality; public pages contain images and posters, not MP4 copies. Research source videos live in `.private/media-source/research/` and competition sources in `.private/media-source/competitions/`. Keep source videos, technical documents, source notes, and other unpublished material inside `.private/`; this directory is ignored by Git.
 
 ## GitHub Pages
 
 The public repository is `dor2zorotop-max/profile`. English starts at `/profile/`; Simplified Chinese starts at `/profile/zh/`. Push to `main` to run the official Pages workflow in `.github/workflows/deploy-pages.yml`: GitHub Actions builds the site, then GitHub Pages publishes it. Set the repository's Pages source to **GitHub Actions**.
 
-For a local production-path check in PowerShell, run `$env:BASE_PATH='/profile'; npm run build`. Leave `BASE_PATH` unset for `npm run dev` at the root path.
+For a local production-path check in PowerShell, run `$env:BASE_PATH='/profile'; npm run build`. Leave `BASE_PATH` unset for `npm run dev` at the root path. The language routes are English at `/profile/`, `/profile/projects`, `/profile/research`, etc., and Simplified Chinese at `/profile/zh/`, `/profile/zh/projects`, `/profile/zh/research`, etc.; the switcher displays `EN / 中文` and preserves the current section where possible.
+
+The five Chinese content instructions are preserved locally under `.private/source/honors/`. Maintain both locale fields together. Research homepage sections use `homepageSections` to interleave explanatory text with selected media; the three project detail pages retain the complete research gallery and all 11 videos. Competition entries use optional subevents, certificate previews, videos, and document links. There is no supplied CPGDEC award certificate, so no certificate is fabricated for that entry.

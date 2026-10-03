@@ -4,16 +4,14 @@ import { profile } from '../data/profile';
 import { research } from '../data/research';
 import { projects } from '../data/projects';
 import { competitions } from '../data/competitions';
-import { education } from '../data/education';
-import { honors } from '../data/honors';
 import { industry } from '../data/industry';
 import { publications } from '../data/publications';
 
 const { locale } = Astro.props as { locale: Locale };
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const labels = locale === 'zh'
-  ? { biography: '个人简介', interests: '研究方向', experience: '科研经历', competitions: '比赛经历', projects: '项目经历', education: '教育背景', honors: '代表性荣誉', role: '角色', detail: '查看详情 →', preparing: '相关工程与产品开发经历正在整理中。' }
-  : { biography: 'Biography', interests: 'Research Interests', experience: 'Research Experience', competitions: 'Competitions', projects: 'Projects', education: 'Education', honors: 'Selected Honors', role: 'Role', detail: 'View details →', preparing: 'Selected engineering and product-development work is being prepared for publication.' };
+  ? { biography: '个人简介', interests: '研究方向', experience: '科研经历', competitions: '比赛经历', projects: '项目经历', resume: '简历：', role: '角色', detail: '查看详情 →', documents: '相关材料' }
+  : { biography: 'Biography', interests: 'Research Interests', experience: 'Research Experience', competitions: 'Competitions', projects: 'Projects', resume: 'Academic and Professional Experience', role: 'Role', detail: 'View details →', documents: 'Related materials' };
 const tabs = [
   { id: 'biography', label: labels.biography },
   { id: 'research', label: labels.interests },
@@ -22,14 +20,19 @@ const tabs = [
   { id: 'projects', label: labels.projects },
 ];
 const portrait = `${base}/media/images/profile-photo.jpg`;
-const profileTitle = locale === 'zh' ? '硕士研究生' : 'M.S. Student';
-const researchPapers = publications[locale].filter(item => item.projectSlug === 'reconfigurable-uav');
+const asset = (path: string) => path.startsWith('/') ? `${base}${path}` : path;
 ---
 <div class="homepage">
   <section class="profile-card" aria-label={locale === 'zh' ? '个人信息' : 'Profile information'}>
     <div class="portrait-column"><img src={portrait} alt={locale === 'zh' ? '洪陈源证件照' : 'Portrait of Chenyuan Hong'} /></div>
-    <div class="identity-column"><h1>{locale === 'zh' ? profile.name : profile.nameEn}</h1><span class="degree-label">{profileTitle}</span><p class="identity-line">{profile.title[locale]}</p><p class="identity-line">{profile.affiliation[locale]}</p></div>
-    <div class="contact-column"><p><strong>{locale === 'zh' ? '单位' : 'Affiliation'}</strong>{profile.affiliation[locale]}</p>{profile.email && <p><strong>Email</strong><a href={`mailto:${profile.email}`}>{profile.email}</a></p>}<a class="quiet-cv-link" href={`${base}/${locale === 'zh' ? 'zh/' : ''}cv`}>{locale === 'zh' ? '查看简历 →' : 'View CV →'}</a></div>
+    <div class="identity-column"><h1>{locale === 'zh' ? profile.name : profile.nameEn}</h1><p class="member-status">{profile.memberStatus[locale]}</p><span class="degree-label">{profile.degree[locale]}</span><p class="identity-line"><strong>{locale === 'zh' ? '专业' : 'Major'}</strong>{profile.major[locale]}</p></div>
+    <div class="contact-column">
+      <p><strong>{locale === 'zh' ? '单位' : 'Affiliation'}</strong>{profile.affiliations[locale].map(item => <span>{item}</span>)}</p>
+      <p><strong>{locale === 'zh' ? '邮箱' : 'Email'}</strong><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+      <p><strong>{locale === 'zh' ? '联系电话' : 'Phone'}</strong><a href={`tel:${profile.phone.en.replace(/[^+\d]/g, '')}`}>{profile.phone[locale]}</a></p>
+      <p><strong>{locale === 'zh' ? '地址' : 'Addresses'}</strong>{profile.addresses[locale].map(item => <span>{item}</span>)}</p>
+      <p><strong>{locale === 'zh' ? '研究方向' : 'Research Interests'}</strong>{profile.researchInterests[locale].map(item => <span>{item}</span>)}</p>
+    </div>
   </section>
 
   <nav class="homepage-tabs" aria-label={locale === 'zh' ? '主页内容' : 'Homepage sections'}>
@@ -37,46 +40,71 @@ const researchPapers = publications[locale].filter(item => item.projectSlug === 
   </nav>
 
   <div class="homepage-panels">
-    <section id="biography" class="homepage-panel" data-panel aria-labelledby="tab-biography"><h2 id="tab-biography">{labels.biography}</h2><p class="lead-copy">{profile.bio[locale]}</p><div class="education-line"><strong>{labels.education}</strong>{education[locale].map(item => <span>{item.period} · {item.institution} · {item.degree} · {item.field}</span>)}</div><div class="honors-line"><strong>{labels.honors}</strong>{honors[locale].map(item => <span>{item.year} · {item.title} ({item.note})</span>)}</div></section>
+    <section id="biography" class="homepage-panel" data-panel aria-labelledby="tab-biography"><h2 id="tab-biography">{labels.biography}</h2><p class="lead-copy">{profile.bio[locale]}</p><div class="experience-timeline"><strong>{labels.resume}</strong>{profile.academicExperience[locale].map(item => <div class="timeline-row"><span class="timeline-period">{item.period}</span><span>{item.text}</span></div>)}</div></section>
 
     <section id="research" class="homepage-panel" data-panel aria-labelledby="tab-research" hidden><h2 id="tab-research">{labels.interests}</h2><div class="research-list">{research[locale].map(item => <article><h3>{item.title}</h3><p>{item.description}</p></article>)}</div></section>
 
     <section id="experience" class="homepage-panel" data-panel aria-labelledby="tab-experience" hidden>
       <h2 id="tab-experience">{labels.experience}</h2>
       <div class="research-list project-list">{projects.map(project => {
-        const images = [
-          ...(project.heroImage ? [{ src: project.heroImage, alt: project.title, caption: project.heroCaption ?? project.title }] : []),
-          ...project.gallery.filter(image => image.homepage),
-        ];
-        const videos = project.videos.filter(video => video.homepage);
+        const findImage = (src: string) => project.heroImage === src ? { src, alt: project.title, caption: project.heroCaption ?? project.title } : project.gallery.find(item => item.src === src);
+        const findVideo = (src: string) => project.videos.find(item => item.src === src);
         const detailUrl = `${base}${locale === 'zh' ? '/zh' : ''}/projects/${project.slug}/`;
         return <article>
           <div class="item-period">{project.period[locale]}</div>
           <h3>{project.title[locale]}</h3>
           <p class="item-role">{labels.role}: {project.role[locale]}</p>
           <p>{project.summary[locale]}</p>
-          {project.slug === 'reconfigurable-uav' && researchPapers.length > 0 && <div class="representative-results"><strong>{locale === 'zh' ? '代表性成果' : 'Representative outputs'}</strong>{researchPapers.map(p => <span>{p.title} · {p.venue} · {p.status} · {p.contribution}</span>)}</div>}
-          {project.result[locale] && <p class="homepage-result">{project.result[locale]}</p>}
-          {(images.length > 0 || videos.length > 0) && <section class="representative-media" aria-labelledby={`${project.slug}-representative-title`}>
-            <h4 id={`${project.slug}-representative-title`}>{locale === 'zh' ? '代表性展示' : 'Representative Media'}</h4>
-            <div class="representative-images">{images.map(image => <figure>
-              <img loading="lazy" decoding="async" src={`${base}${image.src}`} alt={image.alt[locale]} />
-              <figcaption>{image.caption[locale]}</figcaption>
-            </figure>)}</div>
-            {videos.map(video => <figure class="homepage-featured-video">
-              <video controls playsinline preload="metadata" poster={`${base}${video.poster}`} aria-label={video.title[locale]}>
-                <source src={video.src} type="video/mp4" />
-              </video>
-              <figcaption><strong>{locale === 'zh' ? '精选视频' : 'Featured Video'} · {video.title[locale]}</strong><span>{video.caption[locale]}</span></figcaption>
-            </figure>)}
-          </section>}
-          <a class="detail-link" href={detailUrl}>{videos.length ? (locale === 'zh' ? '查看完整实验与视频 →' : 'View all experiments and videos →') : labels.detail}</a>
+          <div class="project-story">
+            {(project.homepageSections ?? []).map(section => {
+              const image = section.kind === 'image' ? findImage(section.src) : undefined;
+              const video = section.kind === 'video' ? findVideo(section.src) : undefined;
+              if (section.kind === 'text') return <section class="story-text"><h4>{section.heading[locale]}</h4><p>{section.body[locale]}</p></section>;
+              if (section.kind === 'image' && image) return <figure class="story-media story-image"><img loading="lazy" decoding="async" src={asset(image.src)} alt={image.alt[locale]} /><figcaption><strong>{section.heading[locale]}</strong><span>{image.caption[locale]}</span></figcaption></figure>;
+              if (section.kind === 'video' && video) return <figure class="story-media"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={asset(video.src)} type="video/mp4" /></video><figcaption><strong>{video.title[locale]}</strong><span>{video.caption[locale]}</span></figcaption></figure>;
+              return null;
+            })}
+          </div>
+          {project.result[locale] && <p class="homepage-result"><strong>{locale === 'zh' ? '代表性成果' : 'Representative Result'}</strong>{project.result[locale]}</p>}
+          {publications[locale].filter(item => item.projectSlug === project.slug).map(item => <p class="homepage-result"><strong>{item.title}</strong><span>{item.venue} · {item.status} · {item.contribution}</span></p>)}
+          <a class="detail-link" href={detailUrl}>{project.videos.length ? (locale === 'zh' ? '查看完整实验与视频 →' : 'View all experiments and videos →') : labels.detail}</a>
         </article>;
       })}</div>
     </section>
-    <section id="competitions" class="homepage-panel" data-panel aria-labelledby="tab-competitions" hidden><h2 id="tab-competitions">{labels.competitions}</h2><div class="research-list competition-list">{competitions[locale].map(item => <article><div class="item-period">{item.period}</div><h3>{item.competition}</h3><p><strong>{item.track}</strong> · {item.award}</p>{item.contribution && <p>{item.contribution}</p>}</article>)}</div></section>
-
-    <section id="projects" class="homepage-panel" data-panel aria-labelledby="tab-projects" hidden><h2 id="tab-projects">{labels.projects}</h2><p class="lead-copy">{industry[locale].length ? '' : labels.preparing}</p>{industry[locale].map(item => <article class="industry-item"><div class="item-period">{item.period}</div><h3>{item.title}</h3><p>{item.summary}</p></article>)}</section>
+    <section id="competitions" class="homepage-panel" data-panel aria-labelledby="tab-competitions" hidden>
+      <h2 id="tab-competitions">{labels.competitions}</h2>
+      <div class="research-list competition-list">{competitions[locale].map(item => <article>
+        <div class="item-period">{item.period}</div>
+        <h3>{item.competition[locale]}</h3>
+        {!item.subevents && <p class="competition-award"><strong>{item.track[locale]}</strong> · {item.award[locale]}</p>}
+        {item.certificate && <a class="certificate-link" href={asset(item.certificate.href)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(item.certificate.preview)} alt={item.certificate.alt[locale]} /><span>{locale === 'zh' ? '查看证书原件 →' : 'View certificate →'}</span></a>}
+        {item.subevents ? <div class="competition-subevents">{item.subevents.map(sub => <section class="competition-subitem">
+          <h4>{sub.title[locale]}</h4><p class="competition-award"><strong>{sub.award[locale]}</strong></p>
+          {sub.certificate && <a class="certificate-link" href={asset(sub.certificate.href)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(sub.certificate.preview)} alt={sub.certificate.alt[locale]} /><span>{locale === 'zh' ? '查看证书原件 →' : 'View certificate →'}</span></a>}
+          <p>{sub.contribution[locale]}</p>
+          {sub.images.length > 0 && <div class="competition-images">{sub.images.map(src => <img loading="lazy" src={asset(src)} alt={sub.title[locale]} />)}</div>}
+          {sub.videos?.map(video => <figure class="competition-video"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={video.src} type="video/mp4" /></video><figcaption>{video.title[locale]}</figcaption></figure>)}
+        </section>)}</div> : <>
+          <p>{item.contribution[locale]}</p>
+          {item.images.length > 0 && <div class="competition-images">{item.images.map(src => <img loading="lazy" src={asset(src)} alt={item.competition[locale]} />)}</div>}
+          {item.videos && <div class="competition-videos">{item.videos.map(video => <figure class="competition-video"><video controls playsinline preload="metadata" poster={asset(video.poster)} aria-label={video.title[locale]}><source src={video.src} type="video/mp4" /></video><figcaption>{video.title[locale]}</figcaption></figure>)}</div>}
+        </>}
+        {item.documents && <p class="industry-documents">{item.documents.map(doc => <a href={asset(doc.href)} target="_blank" rel="noreferrer">{doc.title[locale]} →</a>)}</p>}
+        {item.related && <p class="related-link"><a href={`${base}${locale === 'zh' ? '/zh' : ''}/projects/reconfigurable-uav/`}>{item.related[locale]} →</a></p>}
+      </article>)}</div>
+    </section>
+    <section id="projects" class="homepage-panel" data-panel aria-labelledby="tab-projects" hidden>
+      <h2 id="tab-projects">{labels.projects}</h2>
+      <div class="industry-list">{industry[locale].map(item => <article class="industry-item">
+        {item.period && <div class="item-period">{item.period}</div>}
+        <h3>{item.title}</h3><p class="industry-company">{item.company} · {item.role}</p><p>{item.summary}</p>
+        {item.images.length > 0 && <div class="industry-images">{item.images.slice(0,2).map(src => <img loading="lazy" src={asset(src)} alt={item.title} />)}</div>}
+        <h4>{locale === 'zh' ? '技术工作' : 'Technical Work'}</h4>
+        <ul>{item.responsibilities.map(text => <li>{text}</li>)}</ul>
+        {item.images.length > 2 && <div class="industry-images">{item.images.slice(2).map(src => <a href={asset(src)} target="_blank" rel="noreferrer"><img loading="lazy" src={asset(src)} alt={item.title} /></a>)}</div>}
+        {item.documents.length > 0 && <p class="industry-documents">{item.documents.map(doc => <a href={asset(doc.href)} target="_blank" rel="noreferrer">{doc.label[locale]} →</a>)}</p>}
+      </article>)}</div>
+    </section>
   </div>
 </div>
 <script is:inline>
