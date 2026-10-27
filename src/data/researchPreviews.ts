@@ -7,7 +7,7 @@ export const researchPreviews: Record<string, { work: Record<Locale, string>; re
       zh: '围绕 ORB-SLAM3 四叉树显著性加权 BA、主动机械锁合、Legendre 伪谱轨迹规划与时变避障开展研究，并进行 Flightmare 仿真与多机实物实验。',
       en: 'Research covers quadtree-saliency-weighted bundle adjustment in ORB-SLAM3, active mechanical locking, Legendre pseudospectral trajectory planning, and time-varying obstacle avoidance, with Flightmare simulations and physical multi-UAV experiments.',
     },
-    result: { zh: '完成单机及多机组合飞行演示；相关 CEP、RA-L 论文均在审稿中。', en: 'Demonstrated single-UAV and combined multi-UAV flight. Related CEP and RA-L manuscripts are under review.' },
+    result: { zh: '完成单机及多机组合飞行演示；相关论文已投稿至 ISA Transactions；RA-L 论文在审稿中。', en: 'Demonstrated single-UAV and combined multi-UAV flight. The related manuscript has been submitted to ISA Transactions; the RA-L manuscript is under review.' },
   },
   'autonomous-landing': {
     work: {
